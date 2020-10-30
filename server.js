@@ -15,16 +15,46 @@ app.get('/test', (req, res) => {
     res.send('Helloo!');
 });
 
-mongoose.connect('mongodb://127.0.0.1:27017/budget-db',{
-    useNewUrlParser:true,
-    useCreateIndex : true
-});
+// mongoose.connect('mongodb://127.0.0.1:27017/budget-db',{
+//     useNewUrlParser:true,
+//     useCreateIndex : true
+// });
 
-const data= require('./budget.json');
+// const data= require('./budget.json');
 
 app.get('/budget', (req, res) => {
-    res.json(data);
+   mongoose.connect('mongodb://127.0.0.1:27017/budget_db', {
+    useNewUrlParser:true,
+    useCreateIndex : true,
+    useUnifiedTopology: true
+   }).then(() => {
+       pbModel.find({}).then((result) => {
+           console.log(result);
+           res.send(result);
+           mongoose.connection.close();
+       })
+   })
 });
+
+app.post('/budget', (req, res) => {
+    let data = {id: req.body.id, title: req.body.title, budget: req.body.budget, color: req.body.color}
+    mongoose.connect('mongodb://127.0.0.1:27017/budget_db', {
+        useNewUrlParser:true,
+        useCreateIndex : true,
+        useUnifiedTopology: true
+       }).then( () => {
+           pbModel.insertMany(data, (error, newData) => {
+            console.log(newData);
+            console.log(data);
+               if(newData) {
+                   res.send(newData);
+               } else {
+                res.send(error);
+               }
+               mongoose.connection.close();
+           })
+       })
+})
 
 app.listen(port, () => {
     console.log(`API served at http://localhost:${port}`);

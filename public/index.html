@@ -83,15 +83,15 @@
                {
                 data:[],
                 backgroundColor: [
-                'rgba(255, 99, 132, 0.5)',
-                'rgba(54, 162, 0, 0.8)',
-                'rgba(0, 255, 230, 0.2)',
-                'rgba(22, 256, 192, 0.7)',
-                'rgba(153, 102, 255, 0.5)',
-                'rgba(0, 159, 64, 0.2)',
-                'rgba(33, 159, 64, 0.3)',
-                'rgba(55, 99, 255, 0.2)',
-                'rgba(244, 244, 0, 0.7)',
+                // 'rgba(255, 99, 132, 0.5)',
+                // 'rgba(54, 162, 0, 0.8)',
+                // 'rgba(0, 255, 230, 0.2)',
+                // 'rgba(22, 256, 192, 0.7)',
+                // 'rgba(153, 102, 255, 0.5)',
+                // 'rgba(0, 159, 64, 0.2)',
+                // 'rgba(33, 159, 64, 0.3)',
+                // 'rgba(55, 99, 255, 0.2)',
+                // 'rgba(244, 244, 0, 0.7)',
                 ],
                },
            ],
@@ -111,9 +111,10 @@
            axios.get('http://localhost:3000/budget')
            .then(function (res) {
                console.log(res);
-               for (var i = 0; i< res.data.myBudget.length; i++) {
-                dataSource.datasets[0].data[i] = res.data.myBudget[i].budget;
-                dataSource.labels[i] = res.data.myBudget[i].title;
+               for (var i = 0; i< res.data.length; i++) {
+                dataSource.datasets[0].data[i] = res.data[i].budget;
+                dataSource.labels[i] = res.data[i].title;
+                dataSource.datasets[0].backgroundColor[i] = res.data[i].color;
                }
                donutChart(randomData());
                createChart();
@@ -161,15 +162,7 @@ svg.attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 var key = function(d){ return d.data.label; };
 
 var color = d3.scale.ordinal()    
-	.range(['rgba(255, 99, 132, 0.5)',
-                'rgba(54, 162, 0, 0.8)',
-                'rgba(0, 255, 230, 0.2)',
-                'rgba(22, 256, 192, 0.7)',
-                'rgba(153, 102, 255, 0.5)',
-                'rgba(0, 159, 64, 0.2)',
-                'rgba(33, 159, 64, 0.3)',
-                'rgba(55, 99, 255, 0.2)',
-                'rgba(244, 244, 0, 0.7)']);
+	.range(dataSource.datasets[0].backgroundColor);
 
 function randomData (){
     var labels =  dataSource.labels;
@@ -273,7 +266,7 @@ function donutChart(data) {
          <!-- This is a Semantic HTML Change -->
          <footer role = "footerRole"> <!-- This is an A11y Change -->
             <div class="center">
-                All rights reserved &copy; Fabio Nolasco
+                All rights reserved &copy; Supriya Chinthakuntla
             </div>
            </footer>
 
